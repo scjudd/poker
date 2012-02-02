@@ -72,7 +72,7 @@ class Hand(list):
             return score_tree(0) # high card
 
         if all([c.suit == self[0].suit for c in self[1:]]):
-            return score_tree(5)
+            return score_tree(5) # flush
 
     def __eq__(self, other):
         return self.score == other.score
