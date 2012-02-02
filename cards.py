@@ -46,46 +46,43 @@ class Hand(list):
         vals = [x.value for x in self]
         s = set(vals)
         counts = sorted(zip(map(vals.count,s),s))
+        pairs = [self[n:n+2] for n in xrange(0,len(self)-1)]
 
         def score_tree(root):
             return [root] + [counts[-x][1] for x in xrange(1,len(counts)+1)]
 
-        pairs = (self[n:n+2] for n in xrange(0,len(self)-1))
-        if all([c2.value == c1.value+1 for c1, c2 in pairs]):
+        # this hand is actually an A-5 straight/ sflush
+        if counts == [(1,1),(1,2),(1,3),(1,4),(1,14)]:
             if all([c.suit == self[0].suit for c in self[1:]]):
                 return score_tree(8) # straight flush
             return score_tree(4) # straight
 
+        # normal hand logic
+        if all([c2.value == c1.value+1 for c1, c2 in pairs]):
+            if all([c.suit == self[0].suit for c in self[1:]]):
+                return score_tree(8) # straight flush
         if counts[-1][0]==4:
             return score_tree(7) # four of a kind
-        elif counts[-1][0]==3:
+        if counts[-1][0]==3:
             if counts[0][0]==2:
                 return score_tree(6) # full house
-            else: 
-                return score_tree(3) # three of a kind
-        elif counts[-1][0]==2:
+        if all([c.suit == self[0].suit for c in self[1:]]):
+            return score_tree(5)
+        if all([c2.value == c1.value+1 for c1, c2 in pairs]):
+            return score_tree(4) # straight
+        if counts[-1][0]==3:
+            return score_tree(3) # three of a kind
+        if counts[-1][0]==2:
             if counts[1][0]==2:
                 return score_tree(2) # two pair
-            else:
-                return score_tree(1) # one pair
-        else:
-            return score_tree(0) # high card
-
-        if all([c.suit == self[0].suit for c in self[1:]]):
-            return score_tree(5) # flush
+            return score_tree(1) # one pair
+        return score_tree(0) # high card
 
     def __eq__(self, other):
         return self.score == other.score
 
     def __gt__(self, other):
-        if self.score[0] > other.score[0]:
-            return True
-        if self.score[0] < other.score[0]:
-            return False
-        if self.score[1] > other.score[1]:
-            return True
-        else:
-            return False
+        return self.score > other.score
         
 
 
@@ -95,6 +92,12 @@ if __name__ == '__main__':
     print
 
     h1, h2, h3 = Hand(deck), Hand(deck), Hand(deck)
-    print "Hand 1: {0}. Score: {1}".format([str(card) for card in h1], h1.score)
-    print "Hand 2: {0}. Score: {1}".format([str(card) for card in h2], h2.score)
-    print "Hand 3: {0}. Score: {1}".format([str(card) for card in h3], h3.score)
+    print "Hand 1: {0:<100} Score: {1}".format([str(card) for card in h1], h1.score)
+    print "Hand 2: {0:<100} Score: {1}".format([str(card) for card in h2], h2.score)
+    print "Hand 3: {0:<100} Score: {1}".format([str(card) for card in h3], h3.score)
+    print
+
+    hands = [h1, h2, h3]
+    hands.sort()
+
+    print "Winning Hand: {0:<94} Score: {1}".format([str(card) for card in hands[-1]], hands[-1].score)
