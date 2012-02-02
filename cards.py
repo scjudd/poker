@@ -43,32 +43,36 @@ class Hand(list):
 
     @property
     def score(self):
-        pairs = (self[n:n+2] for n in xrange(0,len(self)-1))
-        if all([c2.value == c1.value+1 for c1, c2 in pairs]):
-            if all([c.suit == self[0].suit for c in self[1:]]):
-                return (8,sum([c.value for c in self])) # straight flush
-            return (4,sum([c.value for c in self])) # straight
         vals = [x.value for x in self]
         s = set(vals)
         counts = sorted(zip(map(vals.count,s),s))
-        if counts[-1][0] == 4:
-            print "4 of a kind"
-        elif counts[-1][0] == 3:
+
+        def score_tree(root):
+            return [root] + [counts[-x][1] for x in xrange(1,len(counts)+1)]
+
+        pairs = (self[n:n+2] for n in xrange(0,len(self)-1))
+        if all([c2.value == c1.value+1 for c1, c2 in pairs]):
+            if all([c.suit == self[0].suit for c in self[1:]]):
+                return score_tree(8) # straight flush
+            return score_tree(4) # straight
+
+        if counts[-1][0]==4:
+            return score_tree(7) # four of a kind
+        elif counts[-1][0]==3:
             if counts[0][0]==2:
-                print "full house"
-            else:
-                print "3 of a kind"
+                return score_tree(6) # full house
+            else: 
+                return score_tree(3) # three of a kind
         elif counts[-1][0]==2:
             if counts[1][0]==2:
-                print "2 pair"
+                return score_tree(2) # two pair
             else:
-                print "pair"
+                return score_tree(1) # one pair
         else:
-            print "high card"
+            return score_tree(0) # high card
 
         if all([c.suit == self[0].suit for c in self[1:]]):
-            return (5,sum([c.value for c in self])) # flush
-        return (0,sum([c.value for c in self])) # high-cards
+            return score_tree(5)
 
     def __eq__(self, other):
         return self.score == other.score
