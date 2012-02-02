@@ -48,11 +48,24 @@ class Hand(list):
             if all([c.suit == self[0].suit for c in self[1:]]):
                 return (8,sum([c.value for c in self])) # straight flush
             return (4,sum([c.value for c in self])) # straight
-        #if # four of a kind:
-        #if # three of a kind:
-        #    if #full house:
-        #if # two pair:
-        #if # one pair:
+        vals = [x.value for x in self]
+        s = set(vals)
+        counts = sorted(zip(map(vals.count,s),s))
+        if counts[-1][0] == 4:
+            print "4 of a kind"
+        elif counts[-1][0] == 3:
+            if counts[0][0]==2:
+                print "full house"
+            else:
+                print "3 of a kind"
+        elif counts[-1][0]==2:
+            if counts[1][0]==2:
+                print "2 pair"
+            else:
+                print "pair"
+        else:
+            print "high card"
+
         if all([c.suit == self[0].suit for c in self[1:]]):
             return (5,sum([c.value for c in self])) # flush
         return (0,sum([c.value for c in self])) # high-cards
