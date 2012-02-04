@@ -49,7 +49,7 @@ class Hand(list):
         pairs = [self[n:n+2] for n in xrange(0,len(self)-1)]
 
         def score_tree(root):
-            return [root] + [counts[-x][1] for x in xrange(1,len(counts)+1)]
+            return tuple([root] + [counts[-x][1] for x in xrange(1,len(counts)+1)])
 
         # this hand is actually an A-5 straight/ sflush
         if counts == [(1,1),(1,2),(1,3),(1,4),(1,14)]:
@@ -84,12 +84,8 @@ class Hand(list):
     def __gt__(self, other):
         return self.score > other.score
         
-
-
 if __name__ == '__main__':
     deck = Deck()
-    print [str(card) for card in deck]
-    print
 
     h1, h2, h3 = Hand(deck), Hand(deck), Hand(deck)
     print "Hand 1: {0:<100} Score: {1}".format([str(card) for card in h1], h1.score)
