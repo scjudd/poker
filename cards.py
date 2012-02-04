@@ -67,7 +67,7 @@ class Hand(list):
             if counts[0][0]==2:
                 return score_tree(6) # full house
         if all([c.suit == self[0].suit for c in self[1:]]):
-            return score_tree(5)
+            return score_tree(5) # flush
         if all([c2.value == c1.value+1 for c1, c2 in pairs]):
             return score_tree(4) # straight
         if counts[-1][0]==3:
