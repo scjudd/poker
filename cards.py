@@ -72,9 +72,9 @@ class Hand(list):
             return score_tree(4) # straight
         if counts[-1][0]==3:
             return score_tree(3) # three of a kind
+        if counts[1][0]==2:
+            return score_tree(2) # two pair
         if counts[-1][0]==2:
-            if counts[1][0]==2:
-                return score_tree(2) # two pair
             return score_tree(1) # one pair
         return score_tree(0) # high card
 
