@@ -97,7 +97,8 @@ if __name__ == '__main__':
     print "Hand 3: {0:<100} Score: {1}".format([str(card) for card in h3], h3.score)
     print
 
-    hands = [h1, h2, h3]
-    hands.sort()
+    # print the winning hand
+    import operator
+    winner = sorted((h1, h2, h3), key=operator.attrgetter('score'), reverse=True)[0]
+    print "Winner: {0:<100} Score: {1}".format([str(card) for card in winner], winner.score)
 
-    print "Winning Hand: {0:<94} Score: {1}".format([str(card) for card in hands[-1]], hands[-1].score)
