@@ -19,6 +19,9 @@ class Card(object):
     def __gt__(self, other):
         return self.value > other.value
 
+    def __hash__(self):
+        return hash((self.suit, self.value))
+
 class Deck(list):
     def __init__(self, card_class=Card):
         list.__init__(self, [card_class(v,s) for v in xrange(1,14) for s in 'dcsh'])
